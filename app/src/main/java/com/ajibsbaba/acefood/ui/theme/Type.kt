@@ -27,13 +27,13 @@ val Typography = Typography(
 
     labelSmall = TextStyle(
         fontFamily = axiformaFamily,
-        fontWeight = FontWeight(800),
+        fontWeight = FontWeight.Normal,
         fontSize = 14.sp
     ),
 
     titleLarge = TextStyle(
         fontFamily = axiformaFamily,
-        fontWeight = FontWeight(800),
+        fontWeight = FontWeight.ExtraBold,
         fontSize = 32.sp,
     ),
 )
