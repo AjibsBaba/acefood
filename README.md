@@ -1,12 +1,28 @@
 # Acefood
 
-Acefood helps people do more with your smartphone Camera by detecting up to 10 classes of diseases in tomato plants, built with [Kotlin].
+Acefood helps people do more with your smartphone Camera by detecting up to 10 classes of diseases
+in tomato plants, built with [Jetpack Compose](https://developer.android.com/jetpack/compose).
 
+To try out this sample app, use the latest stable version
+of [Android Studio](https://developer.android.com/studio).
 
 ### Status: 🚧 In progress 🚧
 
-Acefood is still in the early stages of development, and as such only one screen has been created so far.
+Acefood is still in the early stages of development, and as such only few screens has been created
+so far. However most of the screen layouts has been implemented as well as custom theming.
 
+## Screenshots
+
+TODO
+
+## Features
+
+This app contains 4 screens so far: the home screen, login screen, registration screen and password
+reset screen.
+
+## Credits
+
+Inspired by the works of the google android team
 
 ## License
 
