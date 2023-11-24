@@ -1,6 +1,9 @@
 package com.ajibsbaba.acefood.navigation
 
+import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,15 +23,20 @@ object AcefoodDestinations {
     const val ONBOARDING_ROUTE = "onboarding"
 }
 
+
 @Composable
 fun AcefoodNavigation() {
     val navController = rememberNavController()
+    val context: Context = LocalContext.current
+    val isOnboardingCompleted by
+    OnboardingManager.onboardingCompleted(
+        context
+    ).collectAsState(initial = false)
+
 
     NavHost(
-        navController = navController, startDestination = if (OnboardingManager.onboardingCompleted(
-                LocalContext.current
-            )
-        ) AcefoodDestinations.HOME_ROUTE else AcefoodDestinations.ONBOARDING_ROUTE
+        navController = navController, startDestination = if (isOnboardingCompleted)
+            AcefoodDestinations.HOME_ROUTE else AcefoodDestinations.ONBOARDING_ROUTE
     ) {
         composable(AcefoodDestinations.ONBOARDING_ROUTE) {
             OnboardingScreen(navController = navController)
