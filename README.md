@@ -22,7 +22,7 @@ reset screen and a screen to scan a plant.
 
 ### App scaffolding
 
-Package [`com.ajibsbab.acefood.ui`][1]
+Package [`com.ajibsbaba.acefood.ui`][1]
 
 [`MainActivity.kt`][2] is the entry point of the app `Acefood`.
 
