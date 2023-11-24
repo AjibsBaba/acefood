@@ -13,16 +13,31 @@ so far. However most of the screen layouts has been implemented as well as custo
 
 ## Screenshots
 
-TODO
+<img src="#" alt="Screenshot">
 
 ## Features
 
-This app contains 4 screens so far: the home screen, login screen, registration screen and password
-reset screen.
+This app contains 4 screens so far: the home screen, login screen, registration screen, password
+reset screen and a screen to scan a plant.
 
-## Credits
+### App scaffolding
 
-Inspired by the works of the google android team
+Package [`com.ajibsbab.acefood.ui`][1]
+
+[`MainActivity.kt`][2] is the entry point of the app `Acefood`.
+
+[`NavGraph.kt`][3] configures the navigation routes and actions in the app.
+
+[`OnboardingManager.kt`][4] configures the onboarding screen logic for the app.
+
+
+[1]: app/src/main/java/com/ajibsbaba/acefood
+
+[2]: app/src/main/java/com/ajibsbaba/acefood/MainActivity.kt
+
+[3]: app/src/main/java/com/ajibsbaba/acefood/navigation/NavGraph.kt
+
+[4]: app/src/main/java/com/ajibsbaba/acefood/OnboardingManager.kt
 
 ## License
 

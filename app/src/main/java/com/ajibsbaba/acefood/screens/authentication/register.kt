@@ -1,8 +1,5 @@
-package com.ajibsbaba.acefood.authentication
+package com.ajibsbaba.acefood.screens.authentication
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,31 +24,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.ajibsbaba.acefood.R
-import com.ajibsbaba.acefood.ui.theme.AcefoodTheme
+import com.ajibsbaba.acefood.navigation.AcefoodDestinations
 import com.ajibsbaba.acefood.ui.theme.axiformaFamily
 import com.ajibsbaba.acefood.ui.theme.black50
 
-class ResetPasswordActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            AcefoodTheme {
-
-            }
-        }
-    }
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showSystemUi = true)
 @Composable
-fun ResetPasswordScreen() {
+fun RegisterScreen(navController: NavController) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -63,7 +49,7 @@ fun ResetPasswordScreen() {
                         )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* TODO */ }) {
+                    IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Go to Previous Screen"
@@ -83,7 +69,7 @@ fun ResetPasswordScreen() {
         ) {
             Text(
                 modifier = Modifier.padding(top = 32.dp),
-                text = "Reset Password",
+                text = "Register",
                 style = TextStyle(
                     fontFamily = axiformaFamily,
                     fontWeight = FontWeight.ExtraBold,
@@ -101,16 +87,30 @@ fun ResetPasswordScreen() {
                     keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Email),
                     transformation = VisualTransformation.None
                 )
-
+                FormField(
+                    fieldLabel = "Firstname",
+                    keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    transformation = VisualTransformation.None
+                )
+                FormField(
+                    fieldLabel = "Password",
+                    keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    transformation = PasswordVisualTransformation()
+                )
+                FormField(
+                    fieldLabel = "Confirm Password",
+                    keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    transformation = PasswordVisualTransformation()
+                )
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PrimaryButton(label = "Send Email", action = { /*TODO*/ })
-                TextButton(onClick = { /*TODO*/ }) {
+                PrimaryButton(label = "Register", action = { /*TODO*/ })
+                TextButton(onClick = { navController.navigate(AcefoodDestinations.LOGIN_ROUTE) }) {
                     Text(
-                        text = "Don’t have an account? Register",
+                        text = "Already have an account? Login",
                         style = TextStyle(
                             fontFamily = axiformaFamily,
                             color = black50,
