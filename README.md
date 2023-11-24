@@ -13,7 +13,7 @@ so far. However most of the screen layouts has been implemented as well as custo
 
 ## Screenshots
 
-<img src="#" alt="Screenshot">
+<img src="https://res.cloudinary.com/developerlomo/image/upload/v1697300249/portfolio/Acefood_k97jp2.png" alt="Screenshot">
 
 ## Features
 
@@ -22,7 +22,7 @@ reset screen and a screen to scan a plant.
 
 ### App scaffolding
 
-Package [`com.ajibsbab.acefood.ui`][1]
+Package [`com.ajibsbaba.acefood.ui`][1]
 
 [`MainActivity.kt`][2] is the entry point of the app `Acefood`.
 
