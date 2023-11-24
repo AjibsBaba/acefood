@@ -1,5 +1,6 @@
 package com.ajibsbaba.acefood.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -9,6 +10,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,15 +25,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ajibsbaba.acefood.OnboardingManager
 import com.ajibsbaba.acefood.R
-import com.ajibsbaba.acefood.screens.authentication.PrimaryButton
 import com.ajibsbaba.acefood.navigation.AcefoodDestinations
 import com.ajibsbaba.acefood.ui.theme.axiformaFamily
 import com.ajibsbaba.acefood.ui.theme.black50
+import com.ajibsbaba.acefood.utils.PrimaryButton
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun OnboardingScreen(navController: NavController) {
     val context = LocalContext.current
+    val isOnboardingCompleted by
+    OnboardingManager.onboardingCompleted(context).collectAsState(
+        initial = false
+
+    )
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold { innerPadding ->
         Column(
@@ -75,8 +86,20 @@ fun OnboardingScreen(navController: NavController) {
                 modifier = Modifier.padding(top = 64.dp)
             ) {
                 PrimaryButton(label = "Get Started") {
-                    OnboardingManager.setOnboardingCompleted(context)
-                    navController.navigate(AcefoodDestinations.HOME_ROUTE)
+                    Log.d("Get Started Button", "Clicked")
+
+                    if (!isOnboardingCompleted) {
+                        // Mark onboarding screen as shown
+                        coroutineScope.launch {
+                            OnboardingManager.setOnboardingCompleted(context)
+
+                            // Navigate to the home screen
+                            navController.navigate(AcefoodDestinations.HOME_ROUTE)
+                        }
+
+                    }
+
+
                 }
                 TextButton(
                     onClick = {

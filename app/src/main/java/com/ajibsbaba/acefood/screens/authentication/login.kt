@@ -1,37 +1,32 @@
 package com.ajibsbaba.acefood.screens.authentication
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -39,13 +34,33 @@ import com.ajibsbaba.acefood.R
 import com.ajibsbaba.acefood.navigation.AcefoodDestinations
 import com.ajibsbaba.acefood.ui.theme.axiformaFamily
 import com.ajibsbaba.acefood.ui.theme.black50
-import com.ajibsbaba.acefood.ui.theme.red100
-import com.ajibsbaba.acefood.ui.theme.white100
+import com.ajibsbaba.acefood.utils.DynamicForm
+import com.ajibsbaba.acefood.utils.FormState
+import com.ajibsbaba.acefood.utils.PrimaryButton
+import com.google.firebase.auth.FirebaseAuth
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController) {
+    val auth = FirebaseAuth.getInstance()
+
+    val formStates = remember {
+        listOf(
+            FormState(
+                fieldLabel = "Email Address",
+                keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Email)
+            ),
+            FormState(
+                fieldLabel = "Password",
+                keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Password),
+                transformation = PasswordVisualTransformation()
+            ),
+        )
+    }
+
+    val context: Context = LocalContext.current
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -85,22 +100,23 @@ fun LoginScreen(navController: NavController) {
                 )
             )
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                FormField(
-                    fieldLabel = "Email Address",
-                    keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    transformation = VisualTransformation.None
-                )
-                FormField(
-                    fieldLabel = "Password",
-                    keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    transformation = PasswordVisualTransformation()
-                )
+                DynamicForm(formStates) { value, index ->
+                    formStates[index].value = value
+                }
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PrimaryButton(label = "Login", action = { /*TODO*/ })
+                PrimaryButton(label = "Login", action = {
+                    val email = formStates[0].value.trim()
+                    val password = formStates[1].value.trim()
+
+                    if (email.isNotEmpty() && password.isNotEmpty()) {
+                        signInWithEmailAndPassword(context, auth, email, password)
+                        navController.navigate(AcefoodDestinations.HOME_ROUTE)
+                    }
+                })
                 TextButton(onClick = { navController.navigate(AcefoodDestinations.RESET_PASSWORD_ROUTE) }) {
                     Text(
                         text = "Did you forget your password? Reset",
@@ -119,57 +135,23 @@ fun LoginScreen(navController: NavController) {
     }
 }
 
-@Composable
-fun FormField(
-    fieldLabel: String?,
-    keyboardModifier: KeyboardOptions?,
-    transformation: VisualTransformation?
+
+private fun signInWithEmailAndPassword(
+    context: Context,
+    auth: FirebaseAuth,
+    email: String,
+    password: String,
 ) {
-    var text by remember { mutableStateOf("") }
-    var isValid by remember {
-        mutableStateOf(false)
-    }
-
-    if (keyboardModifier != null) {
-        if (transformation != null) {
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = text,
-                onValueChange = {
-                    text = it
-                    isValid = it.isNotEmpty()
-                },
-                label = {
-                    if (fieldLabel != null) {
-                        Text(fieldLabel)
-                    }
-                },
-                keyboardOptions = keyboardModifier,
-                visualTransformation = transformation
-            )
+    auth.signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val user = auth.currentUser
+            } else {
+                Toast.makeText(
+                    context,
+                    "Login failed: ${task.exception?.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
-    }
-
-    if (!isValid) {
-        Text(text = "Field cannot be empty", style = TextStyle(color = red100))
-    }
-}
-
-
-@Composable
-fun PrimaryButton(label: String?, action: () -> Unit) {
-    Button(
-        modifier = Modifier
-            .height(50.dp)
-            .fillMaxWidth(),
-        onClick = { action },
-        colors = ButtonDefaults.buttonColors(containerColor = red100, contentColor = white100)
-    ) {
-        if (label != null) {
-            Text(
-                label,
-                style = TextStyle(fontFamily = axiformaFamily, fontWeight = FontWeight.ExtraBold)
-            )
-        }
-    }
 }

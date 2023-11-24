@@ -5,10 +5,13 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature android:name="android.hardware.camera.any" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -20,6 +23,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Acefood"
         tools:targetApi="31">
+        <activity
+            android:name=".screens.ScanActivity"
+            android:exported="false"
+            android:label="@string/title_activity_scan"
+            android:theme="@style/Theme.Acefood" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

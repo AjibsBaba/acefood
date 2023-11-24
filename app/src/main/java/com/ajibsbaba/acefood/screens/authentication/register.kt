@@ -1,5 +1,7 @@
 package com.ajibsbaba.acefood.screens.authentication
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,14 +20,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -33,11 +36,42 @@ import com.ajibsbaba.acefood.R
 import com.ajibsbaba.acefood.navigation.AcefoodDestinations
 import com.ajibsbaba.acefood.ui.theme.axiformaFamily
 import com.ajibsbaba.acefood.ui.theme.black50
+import com.ajibsbaba.acefood.utils.DynamicForm
+import com.ajibsbaba.acefood.utils.FormState
+import com.ajibsbaba.acefood.utils.PrimaryButton
+import com.google.firebase.auth.FirebaseAuth
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavController) {
+    val auth = FirebaseAuth.getInstance()
+
+    val formStates = remember {
+        listOf(
+            FormState(
+                fieldLabel = "Email Address",
+                keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Email)
+            ),
+            FormState(
+                fieldLabel = "Firstname",
+                keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Text)
+            ),
+            FormState(
+                fieldLabel = "Password",
+                keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Password),
+                transformation = PasswordVisualTransformation()
+            ),
+            FormState(
+                fieldLabel = "Confirm Password",
+                keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Password),
+                transformation = PasswordVisualTransformation()
+            )
+        )
+    }
+
+    val context: Context = LocalContext.current
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -82,32 +116,24 @@ fun RegisterScreen(navController: NavController) {
                     rememberScrollState()
                 )
             ) {
-                FormField(
-                    fieldLabel = "Email Address",
-                    keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    transformation = VisualTransformation.None
-                )
-                FormField(
-                    fieldLabel = "Firstname",
-                    keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Text),
-                    transformation = VisualTransformation.None
-                )
-                FormField(
-                    fieldLabel = "Password",
-                    keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    transformation = PasswordVisualTransformation()
-                )
-                FormField(
-                    fieldLabel = "Confirm Password",
-                    keyboardModifier = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    transformation = PasswordVisualTransformation()
-                )
+                DynamicForm(formStates) { value, index ->
+                    formStates[index].value = value
+                }
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PrimaryButton(label = "Register", action = { /*TODO*/ })
+                PrimaryButton(label = "Register", action = {
+                    val email = formStates[0].value.trim()
+                    val password = formStates[1].value.trim()
+
+                    if (email.isNotEmpty() && password.isNotEmpty()) {
+                        registerWithEmailAndPassword(context, auth, email, password) {
+                            navController.navigate(AcefoodDestinations.LOGIN_ROUTE)
+                        }
+                    }
+                })
                 TextButton(onClick = { navController.navigate(AcefoodDestinations.LOGIN_ROUTE) }) {
                     Text(
                         text = "Already have an account? Login",
@@ -124,4 +150,25 @@ fun RegisterScreen(navController: NavController) {
         }
 
     }
+}
+
+
+private fun registerWithEmailAndPassword(
+    context: Context,
+    auth: FirebaseAuth,
+    email: String,
+    password: String,
+    onSuccess: () -> Unit
+) {
+    auth.createUserWithEmailAndPassword(email, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                onSuccess.invoke()
+            } else {
+                Toast.makeText(
+                    context,
+                    "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 }
