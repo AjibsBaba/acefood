@@ -12,7 +12,7 @@ import com.ajibsbaba.acefood.navigation.AcefoodNavigation
 import com.ajibsbaba.acefood.ui.theme.AcefoodTheme
 import com.ajibsbaba.acefood.ui.theme.white100
 
-class MainActivity : ComponentActivity() {
+class AcefoodApplication : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
