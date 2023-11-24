@@ -29,7 +29,7 @@
             android:label="@string/title_activity_scan"
             android:theme="@style/Theme.Acefood" />
         <activity
-            android:name=".MainActivity"
+            android:name=".AcefoodApplication"
             android:exported="true"
             android:theme="@style/Theme.Acefood">
             <intent-filter>
