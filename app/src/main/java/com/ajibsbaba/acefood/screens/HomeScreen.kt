@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,10 +23,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.ajibsbaba.acefood.R
+import com.ajibsbaba.acefood.navigation.AcefoodNav
 import com.ajibsbaba.acefood.ui.theme.Typography
 import com.ajibsbaba.acefood.ui.theme.axiformaFamily
 import com.ajibsbaba.acefood.ui.theme.black50
@@ -109,65 +111,6 @@ fun RecentScansCard() {
                 )
             }
         }
-        Row(modifier = Modifier.height(12.dp)) {
-
-        }
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(10.dp))
-                .background(
-                    white100
-                )
-                .padding(16.dp)
-        ) {
-            Column {
-                Text(
-                    text = "Tomato",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = axiformaFamily,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = black50,
-
-                        )
-                )
-                Text(
-                    text = "Late Blight",
-                    style = TextStyle(
-                        fontSize = 13.sp,
-                        fontFamily = axiformaFamily,
-                        fontWeight = FontWeight.Normal,
-                        color = black50,
-
-                        )
-                )
-            }
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = "73%",
-                    style = TextStyle(
-                        fontSize = 13.sp,
-                        fontFamily = axiformaFamily,
-                        fontWeight = FontWeight.Normal,
-                        color = black50,
-
-                        )
-                )
-                Text(
-                    text = "Accuracy",
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontFamily = axiformaFamily,
-                        fontWeight = FontWeight.Normal,
-                        color = black50,
-
-                        )
-                )
-            }
-        }
     }
 }
 
@@ -191,7 +134,9 @@ fun HomeScreen(navController: NavController) {
                 }
             )
         },
-        bottomBar = {}
+        bottomBar = {
+            AcefoodNav(navController)
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -200,15 +145,14 @@ fun HomeScreen(navController: NavController) {
                 .padding(start = 16.dp, end = 16.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 UserCard()
                 ScanButton {
                 }
                 DiseaseDetailsCard()
+                RecentScansCard()
             }
 
-
-            RecentScansCard()
         }
     }
 }
@@ -226,4 +170,11 @@ fun UserCard() {
             Text("hello@ajibsbaba.com", style = Typography.labelSmall, color = Color.Black)
         }
     }
+}
+
+
+@Preview(showSystemUi = true)
+@Composable
+fun HomeScreenPreview() {
+    HomeScreen(navController = rememberNavController())
 }

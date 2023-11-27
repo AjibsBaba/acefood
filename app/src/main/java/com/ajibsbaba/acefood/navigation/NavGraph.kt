@@ -5,12 +5,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ajibsbaba.acefood.OnboardingManager
+import com.ajibsbaba.acefood.screens.AccountInfoScreen
 import com.ajibsbaba.acefood.screens.HomeScreen
+import com.ajibsbaba.acefood.screens.ModelScreen
 import com.ajibsbaba.acefood.screens.OnboardingScreen
+import com.ajibsbaba.acefood.screens.ProfileScreen
 import com.ajibsbaba.acefood.screens.authentication.LoginScreen
 import com.ajibsbaba.acefood.screens.authentication.RegisterScreen
 import com.ajibsbaba.acefood.screens.authentication.ResetPasswordScreen
@@ -21,11 +25,14 @@ object AcefoodDestinations {
     const val REGISTER_ROUTE = "register"
     const val RESET_PASSWORD_ROUTE = "reset"
     const val ONBOARDING_ROUTE = "onboarding"
+    const val PROFILE_ROUTE = "profile"
+    const val ACCOUNT_ROUTE = "account_info"
+    const val MODEL_ROUTE = "model_info"
 }
 
 
 @Composable
-fun AcefoodNavigation() {
+fun AcefoodNavigation(navController: NavController) {
     val navController = rememberNavController()
     val context: Context = LocalContext.current
     val isOnboardingCompleted by
@@ -52,6 +59,15 @@ fun AcefoodNavigation() {
         }
         composable(AcefoodDestinations.RESET_PASSWORD_ROUTE) {
             ResetPasswordScreen(navController = navController)
+        }
+        composable(AcefoodDestinations.PROFILE_ROUTE) {
+            ProfileScreen(navController = navController)
+        }
+        composable(AcefoodDestinations.ACCOUNT_ROUTE) {
+            AccountInfoScreen(navController = navController)
+        }
+        composable(AcefoodDestinations.MODEL_ROUTE) {
+            ModelScreen(navController = navController)
         }
     }
 }
